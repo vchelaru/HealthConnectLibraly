@@ -2,7 +2,7 @@
 using Android.Health.Connect;
 using Android.Health.Connect.DataTypes;
 using Android.Health.Connect.DataTypes.Units;
-using HealthConnectLibraly.HealthStandartClass;
+using HealthConnectLibrary.HealthStandartClass;
 using Java.Util.Concurrent;
 using UnitConverterLibrary;
 using UnitConverterLibrary.UnitsTypes;
@@ -10,7 +10,7 @@ using HydrationRecord = Android.Health.Connect.DataTypes.HydrationRecord;
 using Metadata = Android.Health.Connect.DataTypes.Metadata;
 
 
-namespace HealthConnectLibraly.Platforms.Android
+namespace HealthConnectLibrary.Platforms.Android
 {
 
 
@@ -70,7 +70,7 @@ namespace HealthConnectLibraly.Platforms.Android
                     // Health Connect ist installed
                     // open Google Play Store
                     var playStoreIntent = new Intent(Intent.ActionView);
-                    playStoreIntent.SetData( global::Android.Net.Uri.Parse( "market://details?id=com.google.android.apps.healthdata" ) );
+                    playStoreIntent.SetData( Android.Net.Uri.Parse( "market://details?id=com.google.android.apps.healthdata" ) );
                     activity.StartActivity( playStoreIntent );
                 }
             }

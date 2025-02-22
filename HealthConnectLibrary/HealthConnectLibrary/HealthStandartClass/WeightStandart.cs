@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace HealthConnectLibraly.HealthStandartClass
+namespace HealthConnectLibrary.HealthStandartClass
 {
     public class WeightStandart
     {
@@ -19,3 +19,4 @@ namespace HealthConnectLibraly.HealthStandartClass
         }
     }
 }
+

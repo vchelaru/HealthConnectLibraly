@@ -1,0 +1,3 @@
+[submodule "UnitConverterLibrary"]
+	path = UnitConverterLibrary
+	url = https://github.com/JosefPRajmon/UnitConverterLibrary.git

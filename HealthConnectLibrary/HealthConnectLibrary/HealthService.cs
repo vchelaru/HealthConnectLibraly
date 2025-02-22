@@ -1,9 +1,8 @@
-﻿using Android.Health.Connect.DataTypes;
-using HealthConnectLibraly.HealthStandartClass;
+﻿using HealthConnectLibrary.HealthStandartClass;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace HealthConnectLibraly.Platforms.Android
+namespace HealthConnectLibrary.Platforms.Android
 {
     public partial class HealthService : INotifyPropertyChanged
     {
@@ -62,7 +61,7 @@ namespace HealthConnectLibraly.Platforms.Android
             var activity = Platform.CurrentActivity;  // Správný způsob, jak získat aktivitu v MAUI
 
             // Požádáme o oprávnění
-            // PermissionHelper.RequestPermission( activity, permissions, 100 );
+           // PermissionHelper.RequestPermission( activity, permissions, 100 );
 
             for( int i = 0 ; i < 50 ; i++ )
             {
@@ -91,9 +90,7 @@ namespace HealthConnectLibraly.Platforms.Android
         }
         public async Task InsertWeight( double weight )
         {
-            TimeZoneInfo localZone = TimeZoneInfo.Local;
-            DateTime dateTime = DateTime.Now;
-            DateTimeOffset dto = new DateTimeOffset( dateTime, localZone.GetUtcOffset( dateTime ) );
+            DateTimeOffset dto = HealthFunctionService.GetDateTimeOffsetFromDatetime(DateTime.Now);
             PripereForRecord( out Metadata metadata );
             NewRecord( typeof( WeightRecord ), weight, metadata, dto.UtcDateTime, dto.UtcDateTime );
             await Task.Run( () => InsertDataIntoHealth() );
