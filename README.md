@@ -31,3 +31,20 @@ NewRecord(typeof(HydrationRecord), hydrationStandard.Hydration, metadata,
 
 await InsertDataIntoHealth();
 ```
+
+you need create activity and permision in android manifest
+```
+	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:supportsRtl="true">
+		<activity android:name=".ViewPermissionUsageActivity" android:exported="true" android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+				<category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+			</intent-filter>
+		</activity>
+	</application>
+	<uses-permission android:name="android.permission.health.READ_HYDRATION" />
+	<uses-permission android:name="android.permission.health.READ_WEIGHT" />
+	<uses-permission android:name="android.permission.health.WRITE_HYDRATION" />
+	<uses-permission android:name="android.permission.health.WRITE_WEIGHT" />
+	
+```
