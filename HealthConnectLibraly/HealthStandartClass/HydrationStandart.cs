@@ -4,18 +4,18 @@ namespace HealthConnectLibraly.HealthStandartClass
 {
     public class HydrationStandart
     {
-        public DateTime DringTime { get; private set; }
-        public float Hydratation { get; private set; }
+        public DateTime DrinkTime { get; private set; }
+        public float Hydration { get; private set; }
         public HydrationStandart( DateTime DringTimeInThisZone, float HydratationInMilitrs, bool thisZone )
         {
-            DringTime = DringTimeInThisZone;
-            Hydratation = HydratationInMilitrs;
+            DrinkTime = DringTimeInThisZone;
+            Hydration = HydratationInMilitrs;
         }
         [JsonConstructor]
         public HydrationStandart( DateTime DringTime, float Hydratation )
         {
-            this.DringTime = DringTime;
-            this.Hydratation = Hydratation;
+            this.DrinkTime = DringTime;
+            this.Hydration = Hydratation;
         }
     }
 }

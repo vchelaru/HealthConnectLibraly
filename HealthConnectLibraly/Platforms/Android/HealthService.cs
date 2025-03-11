@@ -50,7 +50,7 @@ namespace HealthConnectLibraly.Platforms.Android
             }
         }
         #region Permision
-        async partial void GetPermisionParticular()
+        private partial HealthService GetPermisionParticular()
         {
 
             try
@@ -63,6 +63,7 @@ namespace HealthConnectLibraly.Platforms.Android
                     var intent = new Intent("androidx.health.ACTION_HEALTH_CONNECT_SETTINGS");
                     //get permissions for health connect
                     activity.StartActivity( intent );
+                    return this;
 
                 }
                 catch( ActivityNotFoundException ex )
@@ -72,10 +73,12 @@ namespace HealthConnectLibraly.Platforms.Android
                     var playStoreIntent = new Intent(Intent.ActionView);
                     playStoreIntent.SetData( global::Android.Net.Uri.Parse( "market://details?id=com.google.android.apps.healthdata" ) );
                     activity.StartActivity( playStoreIntent );
+                    throw;
                 }
             }
             catch( Exception )
             {
+                throw;
             }
         }
 
@@ -84,7 +87,7 @@ namespace HealthConnectLibraly.Platforms.Android
         //list of all recors for saving
         private IList<Record> Records { get; set; } = new List<Record>();
         //function for create record by type
-        void NewRecord( Type type, double value, Metadata metadata, DateTime dateTimeStart, DateTime dateTimeEnd )
+        HealthService NewRecord( Type type, double value, Metadata metadata, DateTime dateTimeStart, DateTime dateTimeEnd )
         {
             Record record;
             Java.Time.Instant instantStart = Java.Time.Instant.Parse(dateTimeStart.ToString($"yyyy-MM-ddTHH:mm:ssZ"));
@@ -110,9 +113,10 @@ namespace HealthConnectLibraly.Platforms.Android
         ).Build();
             }
             Records.Add( record );
+            return this;
         }
-        //priper metadata
-        public void PripereForRecord( out Metadata metadata )
+        //Prepare metadata
+        public void PrepareForRecord( out Metadata metadata )
         {
 
             // create metadata with inicialize

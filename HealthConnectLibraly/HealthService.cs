@@ -47,7 +47,7 @@ namespace HealthConnectLibraly.Platforms.Android
         {
             GetPermisionParticular();
         }
-        partial void GetPermisionParticular();
+        private partial HealthService GetPermisionParticular();
         public async Task<bool> CheckAndRequestHealthPermissions()
         {
 #if ANDROID
@@ -84,9 +84,9 @@ namespace HealthConnectLibraly.Platforms.Android
         public async Task InsertHydratacion( HydrationStandart hydrationStandart )
         {
             TimeZoneInfo localZone = TimeZoneInfo.Local;
-            DateTimeOffset dto = new DateTimeOffset( hydrationStandart.DringTime, localZone.GetUtcOffset( hydrationStandart.DringTime ) );
-            PripereForRecord( out Metadata metadata );
-            NewRecord( typeof( HydrationRecord ), hydrationStandart.Hydratation, metadata, hydrationStandart.DringTime.ToUniversalTime(), hydrationStandart.DringTime.ToUniversalTime() );
+            DateTimeOffset dto = new DateTimeOffset( hydrationStandart.DrinkTime, localZone.GetUtcOffset( hydrationStandart.DrinkTime ) );
+            PrepareForRecord( out Metadata metadata );
+            NewRecord( typeof( HydrationRecord ), hydrationStandart.Hydration, metadata, hydrationStandart.DrinkTime.ToUniversalTime(), hydrationStandart.DrinkTime.ToUniversalTime() );
             await Task.Run( () => InsertDataIntoHealth() );
         }
         public async Task InsertWeight( double weight )
@@ -94,7 +94,7 @@ namespace HealthConnectLibraly.Platforms.Android
             TimeZoneInfo localZone = TimeZoneInfo.Local;
             DateTime dateTime = DateTime.Now;
             DateTimeOffset dto = new DateTimeOffset( dateTime, localZone.GetUtcOffset( dateTime ) );
-            PripereForRecord( out Metadata metadata );
+            PrepareForRecord( out Metadata metadata );
             NewRecord( typeof( WeightRecord ), weight, metadata, dto.UtcDateTime, dto.UtcDateTime );
             await Task.Run( () => InsertDataIntoHealth() );
             GetWeight();
