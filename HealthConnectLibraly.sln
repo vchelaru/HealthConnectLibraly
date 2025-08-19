@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthConnectLibraly", "Hea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitConverterLibrary", "UnitConverterLibrary\UnitConverterLibrary\UnitConverterLibrary.csproj", "{C1A73085-14C4-4355-8E5A-5CA262D95A93}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMauiApp", "SampleMauiApp\SampleMauiApp.csproj", "{4024B5D8-C57A-4060-A038-752F7B5AE162}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +23,15 @@ Global
 		{C1A73085-14C4-4355-8E5A-5CA262D95A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1A73085-14C4-4355-8E5A-5CA262D95A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1A73085-14C4-4355-8E5A-5CA262D95A93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4024B5D8-C57A-4060-A038-752F7B5AE162}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4024B5D8-C57A-4060-A038-752F7B5AE162}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4024B5D8-C57A-4060-A038-752F7B5AE162}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4024B5D8-C57A-4060-A038-752F7B5AE162}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5AD3D84E-4489-46FA-A258-AD613FBF3C74}
 	EndGlobalSection
 EndGlobal
