@@ -99,13 +99,13 @@ namespace HealthConnectLibraly.Platforms.Android
         #region Get
         public void GetHydration()
         {
-            GetFromHealth( typeof( HydrationRecord ) );
+            UpdateRecordsFromHealth( typeof( HydrationRecord ) );
         }
         public void GetWeight()
         {
-            GetFromHealth( typeof( WeightRecord ) );
+            UpdateRecordsFromHealth( typeof( WeightRecord ) );
         }
-        partial void GetFromHealth( Type type );
+        partial void UpdateRecordsFromHealth( Type type );
         #endregion
     }
 }

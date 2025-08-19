@@ -23,33 +23,33 @@ public partial class HealthService
         try
         {
             var context = Platform.CurrentActivity?.ApplicationContext;
-            if( context == null )
+            if (context == null)
             {
-                Console.WriteLine( "Chyba: context je null." );
+                Console.WriteLine("Chyba: context je null.");
                 return;
             }
 
             // Použití konstanty Context.HEALTH_CONNECT_SERVICE
-            HealthConnectManager = context.GetSystemService( Context.HealthconnectService ) as HealthConnectManager;
-            if( HealthConnectManager == null )
+            HealthConnectManager = context.GetSystemService(Context.HealthconnectService) as HealthConnectManager;
+            if (HealthConnectManager == null)
             {
-                Console.WriteLine( "Nepodařilo se získat HealthConnectManager" );
+                Console.WriteLine("Nepodařilo se získat HealthConnectManager");
                 return;
             }
 
-            Console.WriteLine( "HealthConnectManager byl úspěšně inicializován." );
+            Console.WriteLine("HealthConnectManager byl úspěšně inicializován.");
         }
-        catch( Exception ex )
+        catch (Exception ex)
         {
-            Console.WriteLine( $"Chyba při inicializaci: {ex.Message}" );
-            Console.WriteLine( $"Stack trace: {ex.StackTrace}" );
-            if( ex.InnerException != null )
+            Console.WriteLine($"Chyba při inicializaci: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
+            if (ex.InnerException != null)
             {
-                Console.WriteLine( $"Inner exception: {ex.InnerException.Message}" );
+                Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
             }
         }
     }
-    
+
     #region Permision
     private partial HealthService GetPermisionParticular()
     {
@@ -63,21 +63,21 @@ public partial class HealthService
             {
                 var intent = new Intent("androidx.health.ACTION_HEALTH_CONNECT_SETTINGS");
                 //get permissions for health connect
-                activity.StartActivity( intent );
+                activity.StartActivity(intent);
                 return this;
 
             }
-            catch( ActivityNotFoundException ex )
+            catch (ActivityNotFoundException ex)
             {
                 // Health Connect isn't installed
                 // open Google Play Store
                 var playStoreIntent = new Intent(Intent.ActionView);
-                playStoreIntent.SetData( global::Android.Net.Uri.Parse( "market://details?id=com.google.android.apps.healthdata" ) );
-                activity.StartActivity( playStoreIntent );
+                playStoreIntent.SetData(global::Android.Net.Uri.Parse("market://details?id=com.google.android.apps.healthdata"));
+                activity.StartActivity(playStoreIntent);
                 throw;
             }
         }
-        catch( Exception )
+        catch (Exception)
         {
             throw;
         }
@@ -89,19 +89,19 @@ public partial class HealthService
     //list of all recors for saving
     private IList<Record> Records { get; set; } = new List<Record>();
     //function for create record by type
-    HealthService NewRecord( Type type, double value, Metadata metadata, DateTime dateTimeStart, DateTime dateTimeEnd )
+    HealthService NewRecord(Type type, double value, Metadata metadata, DateTime dateTimeStart, DateTime dateTimeEnd)
     {
         Record record;
         Java.Time.Instant instantStart = Java.Time.Instant.Parse(dateTimeStart.ToString($"yyyy-MM-ddTHH:mm:ssZ"));
         Java.Time.Instant instantEnd = Java.Time.Instant.Parse(dateTimeEnd.ToString($"yyyy-MM-ddTHH:mm:ssZ"));
-        if( type == typeof( HydrationRecord ) )
+        if (type == typeof(HydrationRecord))
         {
-            double liters = UnitConverter.Convert(value,VolumeUnit.MlToL );
+            double liters = UnitConverter.Convert(value, VolumeUnit.MlToL);
             record = new HydrationRecord.Builder(
                         metadata,
                       instantStart, //start activity
                       instantEnd,  //end activity
-                        Volume.FromLiters( liters )
+                        Volume.FromLiters(liters)
             ).Build();
 
 
@@ -111,23 +111,23 @@ public partial class HealthService
             record = new WeightRecord.Builder(
         metadata,
       instantStart,
-        Mass.FromGrams( UnitConverter.Convert( value, WeightUnit.KgToG ) )
+        Mass.FromGrams(UnitConverter.Convert(value, WeightUnit.KgToG))
     ).Build();
         }
-        Records.Add( record );
+        Records.Add(record);
         return this;
     }
     //Prepare metadata
-    public void PrepareForRecord( out Metadata metadata )
+    public void PrepareForRecord(out Metadata metadata)
     {
 
         // create metadata with inicialize
         metadata = new Metadata.Builder()
         .Build();
 
-        if( metadata == null )
+        if (metadata == null)
         {
-            throw new InvalidOperationException( "metadata arent created" );
+            throw new InvalidOperationException("metadata arent created");
         }
     }
     #endregion
@@ -137,32 +137,32 @@ public partial class HealthService
         try
         {
             bool hasPermission = await CheckAndRequestHealthPermissions();
-            if( !hasPermission )
+            if (!hasPermission)
             {
-                Console.WriteLine( "permision not getted." );
+                Console.WriteLine("permision not getted.");
                 return;
             }
             try
             {
                 InitializeHealthConnect();
             }
-            catch( Exception )
+            catch (Exception)
             {
 
                 throw;
             }
             // check HealthConnectManager
-            if( HealthConnectManager == null )
+            if (HealthConnectManager == null)
             {
-                throw new InvalidOperationException( "HealthConnectManager není inicializován" );
+                throw new InvalidOperationException("HealthConnectManager není inicializován");
             }
 
 
             // make executor and check
             var executor = Executors.NewSingleThreadExecutor();
-            if( executor == null )
+            if (executor == null)
             {
-                throw new InvalidOperationException( "Nepodařilo se vytvořit executor" );
+                throw new InvalidOperationException("Nepodařilo se vytvořit executor");
             }
             // make receiver and check
             var outcomeReceiver = new HydrationOutcomeReceiver(result =>
@@ -193,113 +193,141 @@ public partial class HealthService
                 }
             });
             //check instance
-            if( outcomeReceiver == null )
+            if (outcomeReceiver == null)
             {
-                throw new InvalidOperationException( "Nepodařilo se vytvořit receiver" );
+                throw new InvalidOperationException("Nepodařilo se vytvořit receiver");
             }
 
             // call InsertRecords and save data into health connect
-            HealthConnectManager.InsertRecords( Records, executor, outcomeReceiver );
+            HealthConnectManager.InsertRecords(Records, executor, outcomeReceiver);
         }
-        catch( Exception ex )
+        catch (Exception ex)
         {
-            Console.WriteLine( $"Error inserting hydration record: {ex.Message}" );
+            Console.WriteLine($"Error inserting hydration record: {ex.Message}");
             throw;
         }
     }
 
-    async partial void GetFromHealth( Type type )
+    public async Task<T[]?> GetRecordsAsync<T>(DateTime startTime, DateTime endTime)
     {
         try
         {
             bool hasPermission = await CheckAndRequestHealthPermissions();
-            if( !hasPermission )
+            if (!hasPermission)
             {
-                Console.WriteLine( "Oprávnění nebylo uděleno." );
-                return;
+                Console.WriteLine("Oprávnění nebylo uděleno.");
+                return null;
             }
             try
             {
                 InitializeHealthConnect();
             }
-            catch( Exception )
+            catch (Exception)
             {
                 throw;
             }
 
-            if( HealthConnectManager == null )
+            if (HealthConnectManager == null)
             {
-                throw new InvalidOperationException( "HealthConnectManager není inicializován" );
+                throw new InvalidOperationException("HealthConnectManager není inicializován");
             }
 
             // create times for this day
             var now = DateTime.Now;
-            var startTimeStr = now.Date.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            var endTimeStr = now.Date.AddDays(1).ToString("yyyy-MM-ddTHH:mm:ssZ");
+            var startTimeStr = startTime.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            var endTimeStr = endTime.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
-            var startTime = Java.Time.Instant.Parse(startTimeStr);
-            var endTime = Java.Time.Instant.Parse(endTimeStr);
+            var startTimeJava = Java.Time.Instant.Parse(startTimeStr);
+            var endTimeJava = Java.Time.Instant.Parse(endTimeStr);
 
             // Vytvoříme metadata pro request
             var metadata = new Metadata.Builder().Build();
 
             // Vytvoříme executor
             var executor = Executors.NewSingleThreadExecutor();
-            if( executor == null )
+            if (executor == null)
             {
-                throw new InvalidOperationException( "Nepodařilo se vytvořit executor" );
+                throw new InvalidOperationException("Nepodařilo se vytvořit executor");
             }
 
+            TaskCompletionSource<T[]?> tcs = new ();
+
+
             // Vytvoříme receiver jako Java objekt implementující IOutcomeReceiver
-            HydrationOutcomeReceiver  outcomeReceiver = new HydrationOutcomeReceiver( result =>
+            HydrationOutcomeReceiver outcomeReceiver = new HydrationOutcomeReceiver(result =>
             {
 
-                if( result != null )
+                if (result != null)
                 {
                     if (result is ReadRecordsResponse collection)
                     {
                         HydrationRecords.Clear();
                         //take only hydratacionreqest into variable and give them into my array
-                        var hydratationRecords = collection.Records.OfType<HydrationRecord>();
-
-                        foreach (var record in hydratationRecords)
-                        {
-                            HydrationRecords.Add(new HydrationStandard(DateTime.Parse(record.StartTime.ToString()),(float)UnitConverter.Convert(record.Volume.InLiters,VolumeUnit.LToMl)));
-                        }
-                        //take last weight
-                        var weightRecord = collection.Records.OfType<WeightRecord>();
-                        if (weightRecord.Count()>0)
-                        {
-                            LastWeight = ( (WeightRecord) ( weightRecord.First() ) ).Weight.InGrams;
-                        }
-
+                        tcs.TrySetResult(collection?.Records.OfType<T>().ToArray());
+                    }
+                    else
+                    {
+                        tcs.TrySetResult(null);
                     }
                 }
                 else
                 {
-                    Console.WriteLine( "Result was null" );
+                    Console.WriteLine("Result was null");
+                    tcs.TrySetResult(null);
                 }
-            } );
+            });
 
 
-            var recordClass = Java.Lang.Class.FromType(type);
+            var recordClass = Java.Lang.Class.FromType(typeof(T));
             var builder = new ReadRecordsRequestUsingFilters.Builder(recordClass);
             var readRequest = builder.Build() as ReadRecordsRequest;
 
-            if( readRequest == null )
+            if (readRequest == null)
             {
-                throw new InvalidOperationException( "Nepodařilo se vytvořit ReadRecordsRequest" );
+                throw new InvalidOperationException("Nepodařilo se vytvořit ReadRecordsRequest");
             }
 
             // Pokračování s vytvořeným requestem
-            HealthConnectManager.ReadRecords( readRequest, executor, outcomeReceiver );
+            HealthConnectManager.ReadRecords(readRequest, executor, outcomeReceiver);
 
+            var result = await tcs.Task;
 
+            return result ?? null;
         }
-        catch( Exception ex )
+        catch (Exception ex)
         {
-            Console.WriteLine( $"Error reading hydration records: {ex.Message}" );
+            Console.WriteLine($"Error reading hydration records: {ex.Message}");
             throw;
+        }
+    }
+
+    async partial void UpdateRecordsFromHealth(Type type)
+    {
+        if(type == typeof(HydrationRecord))
+        {
+            var hydrationRecords = await GetRecordsAsync<HydrationRecord>(
+                startTime: DateTime.Now.AddDays(-1),
+                endTime: DateTime.Now);
+
+            HydrationRecords.Clear();
+
+            foreach (var hydrationRecord in hydrationRecords)
+            {
+                HydrationRecords.Add(new HydrationStandard(DateTime.Parse(hydrationRecord.StartTime.ToString()), (float)UnitConverter.Convert(hydrationRecord.Volume.InLiters, VolumeUnit.LToMl)));
+            }
+        }
+        else if(type == typeof(WeightRecord))
+        {
+            var weightRecord = await GetRecordsAsync<WeightRecord>(
+                startTime: DateTime.Now.AddDays(-1),
+                endTime: DateTime.Now);
+
+            //take last weight
+
+            if (weightRecord.Count() > 0)
+            {
+                LastWeight = (weightRecord.First()).Weight.InGrams;
+            }
         }
     }
 }

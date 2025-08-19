@@ -17,12 +17,18 @@
                 Text="Hello, World!"
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1" />
-
+            
             <Button
-                x:Name="ReadHealthDataButton"
+                x:Name="AddHydrationButton"
                 Text="Add Hydration to Health Connect" 
                 Clicked="HandleAddHydrationClicked"
                 HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="ReadHydrationButton"
+                Text="Tap to read hydration"
+                Clicked="HandleReadHydration"
+                HorizontalOptions="Fill"/>
         </VerticalStackLayout>
     </ScrollView>
 

@@ -2,6 +2,10 @@
 
 namespace HealthConnectLibraly.HealthStandartClass;
 
+/// <summary>
+/// Represents a hydration record which can be created used cross-platform. On Android this
+/// maps to Android.Health.Connect.DataTypes.HydrationRecord
+/// </summary>
 public class HydrationStandard
 {
     public DateTime DrinkTime { get; private set; }
